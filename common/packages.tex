@@ -1,0 +1,130 @@
+\PassOptionsToPackage{
+  german,
+  unicode,
+  pdfusetitle,
+  colorlinks,
+  linkcolor=vertexDarkRed,
+  urlcolor=vertexDarkRed,
+  citecolor=vertexDarkRed,
+}{hyperref}
+\PassOptionsToPackage{
+  aux,
+}{rerunfilecheck}
+
+\documentclass[
+  9pt,
+  aspectratio=1610,
+]{beamer}
+\usetheme{vertex}
+
+\usefonttheme{professionalfonts}
+\usepackage[english, french, ngerman]{babel}
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}[
+  SmallCapsFont = {Latin Modern Roman Caps},
+]
+\newfontfamily{\latinmodernroman}{Latin Modern Roman}[
+  SmallCapsFont = {Latin Modern Roman Caps},
+]
+\DeclareTextFontCommand{\latinmodernrm}{\latinmodernroman}
+\newfontfamily{\latinmodernsans}{Latin Modern Sans}
+\DeclareTextFontCommand{\latinmodernsf}{\latinmodernsans}
+\newfontfamily{\latinmodernmono}{Latin Modern Mono}
+\DeclareTextFontCommand{\latinmoderntt}{\latinmodernmono}
+
+\usepackage{fontawesome5}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{mleftright}
+
+\usepackage[
+  math-style=ISO,
+  bold-style=ISO,
+  sans-style=italic,
+  nabla=upright,
+  partial=upright,
+  mathrm=sym,
+]{unicode-math}
+\setmathfont{Latin Modern Math}[version=normal]
+\setmathfont{XITS Math}[version=xits]
+\setmathfont{XITS Math}[version=xitsss1, StylisticSet=1]
+\mathversion{normal}
+
+\usepackage[
+  locale=DE,
+  separate-uncertainty=true,
+  per-mode=symbol-or-fraction,
+]{siunitx}
+
+\usepackage[
+  version=4,
+  math-greek=default,
+  text-greek=default,
+]{mhchem}
+
+\usepackage[
+  german=quotes,
+  autostyle,
+]{csquotes}
+\usepackage{xfrac}
+
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs, siunitx, varwidth}
+\usepackage{threeparttable}
+
+\usepackage{graphicx}
+
+\usepackage[
+  compatibility=false,
+]{caption}
+\usepackage{subcaption}
+
+\usepackage{xcolor}
+\usepackage{metalogo}
+\usepackage{pdflscape}
+
+\usepackage{fancyvrb}
+\usepackage[outputdir=build]{minted2}
+\setminted{
+  autogobble,
+  breaklines,
+  stripnl=true,
+}
+\usemintedstyle{pyopp}
+
+\usepackage[
+  theorems,
+  many,
+]{tcolorbox}
+
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows,
+  arrows.meta,
+  graphs,
+  graphdrawing,
+  positioning,
+  shadows,
+  shapes,
+}
+
+\usepackage[edges]{forest}
+
+\usepackage[
+  europeanresistors, % follow DIN EN 60617-4
+  americaninductors, % follow DIN EN 60617-4
+  siunitx
+]{circuitikz}
+
+\usegdlibrary{trees}
+\usepackage[compat=1.1.0]{tikz-feynman}
+
+\usepackage[
+  shortcuts,
+]{extdash}
+
+\usepackage[noframe]{showframe}
+\usepackage{bookmark}

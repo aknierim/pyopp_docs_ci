@@ -1,0 +1,33 @@
+\tcbset{
+  noparskip,
+  colback=white,
+  colframe=vertexDarkGrey,
+  boxsep=1mm,
+  coltext=black,
+  coltitle=white,
+  left=0mm,
+  right=0mm,
+  top=0.5mm,
+  toptitle=-1mm,
+  bottom=0mm,
+  bottomtitle=-1mm,
+  sharp corners,
+  before upper={\raggedright},
+  before title={\raggedright},
+}
+
+\tikzset{
+  invisible/.style={opacity=0,text opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+
+
+% Tabularray settings
+\DefTblrTemplate{contfoot-text}{normal}{Weiter auf der nächsten Seite}
+\SetTblrTemplate{contfoot-text}{normal}
+\DefTblrTemplate{conthead-text}{normal}{(Fortsetzung)}
+\SetTblrTemplate{conthead-text}{normal}

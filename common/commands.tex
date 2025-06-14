@@ -1,0 +1,352 @@
+\ExplSyntaxOn
+
+\RenewDocumentEnvironment {block} {m o} {
+  \IfValueTF{#2}{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+      #2,
+    ]
+  }{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+    ]
+  }
+}{
+  \end{tcolorbox}
+}
+
+\RenewDocumentEnvironment {alertblock} {m o} {
+  \IfValueTF{#2}{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+      colframe=vertexDarkRed,
+      #2,
+    ]
+  }{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+      colframe=vertexDarkRed,
+    ]
+  }
+}{
+  \end{tcolorbox}
+}
+
+\RenewDocumentEnvironment {exampleblock} {m o} {
+  \IfValueTF{#2}{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+      colframe=blue!80!black,
+      #2,
+    ]
+  }{
+    \begin{tcolorbox}[
+      adjusted~title=#1,
+      colframe=blue!80!black,
+    ]
+  }
+}{
+  \end{tcolorbox}
+}
+
+\newcounter{heightgroup}
+
+
+% see https://tex.stackexchange.com/a/374564/59716
+\NewDocumentEnvironment {BeamerCodeFrame} {O{} g} {
+  \IfValueTF{#2}{
+    \begin{frame}[fragile, environment=BeamerCodeFrame, #1]{#2}
+  }{
+    \begin{frame}[fragile, environment=BeamerCodeFrame, #1]
+  }
+}{
+  \end{frame}
+}
+
+
+\NewDocumentEnvironment {CodeExplanation} {o m O{Code} O{Erklärung} D<>{}} {
+  \NewDocumentCommand \Explanation {D<>{}} {
+      \end{tcolorbox}
+    \end{column}
+    \begin{column}{
+      \IfValueTF {#1} {
+        #1
+      }{
+        \fp_eval:n {1 - 0.02 - #2}
+      }
+      \textwidth
+    }
+    \begin{tcolorbox}[
+      equal~height~group=\theheightgroup,
+      adjusted~title=#4,
+      valign=top,
+      ##1,
+    ]
+  }
+  \begin{columns}[onlytextwidth, t]
+    \begin{column}{#2 \textwidth}
+      \begin{tcolorbox}[
+        adjusted~title=#3,
+        equal~height~group=\theheightgroup,
+        valign=top,
+        #5,
+      ]
+}{
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+  \stepcounter{heightgroup}
+}
+
+
+\NewDocumentEnvironment {CodeExample} {o m O{Code} O{Ergebnis} D<>{}} {
+  \NewDocumentCommand \CodeResult {D<>{}} {
+      \end{tcolorbox}
+    \end{column}
+    \begin{column}{
+      \IfValueTF {#1} {
+        #1
+      }{
+        \fp_eval:n {1 - 0.02 - #2}
+      }
+      \textwidth
+    }
+      \begin{tcolorbox}[
+        adjusted~title=#4,
+        colframe=gray!40,
+        coltitle=black,
+        equal~height~group=\theheightgroup,
+        valign=top,
+        ##1,
+      ]
+        \begin{EmulateArticle}
+  }
+  \begin{columns}[onlytextwidth, t]
+    \begin{column}{#2 \textwidth}
+      \begin{tcolorbox}[
+        adjusted~title=#3,
+        equal~height~group=\theheightgroup,
+        valign=top,
+        #5,
+      ]
+}{
+        \end{EmulateArticle}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+  \stepcounter{heightgroup}
+}
+
+\NewDocumentEnvironment {Packages} {} {
+  \begin{block}{Benötigte~Pakete}
+}{
+  \end{block}
+}
+
+\makeatletter
+\NewDocumentEnvironment {EmulateArticle} {} {
+  \rmfamily
+  \newfontfamily\frenchfontsf{Latin~Modern~Roman}
+  \newfontfamily\englishfontsf{Latin~Modern~Roman}
+  \let\textrm=\latinmodernrm
+  \let\textsf=\latinmodernsf
+  \let\texttt=\latinmoderntt
+  \renewcommand\thempfootnote{\arabic{mpfootnote}}
+
+  \color{black}
+  \setbeamercolor{item}{fg=black}
+  \setbeamercolor{itemize/enumerate~body}{fg=black}
+  \setbeamercolor{itemize/enumerate~subbody}{fg=black}
+  \setbeamercolor{itemize/enumerate~subsubbody}{fg=black}
+  \setbeamercolor{description~item}{fg=black}
+  \setbeamercolor{enumerate~item}{fg=black}
+  \setbeamercolor{itemize~item}{fg=black}
+  \setbeamercolor{normal~text}{fg=black}
+  \setbeamercolor{block~body}{fg=black}
+  \setbeamerfont{item}{family=\rmfamily, size=\normalsize}
+  \setbeamerfont{itemize/enumerate~body}{family=\rmfamily, size=\normalsize}
+  \setbeamerfont{itemize/enumerate~subbody}{family=\rmfamily, size=\normalsize}
+  \setbeamerfont{itemize/enumerate~subsubbody}{family=\rmfamily, size=\normalsize}
+  \setbeamerfont{description~item}{series=\bfseries}
+  \setbeamertemplate{itemize~item}{\bullet}
+  \setbeamertemplate{itemize~subitem}{--}
+  \setbeamertemplate{itemize~subsubitem}{\textasteriskcentered}
+  \setbeamertemplate{enumerate~item}{\theenumi.}
+  \setbeamertemplate{enumerate~subitem}{\alph{enumii})}
+  \setbeamertemplate{enumerate~subsubitem}{\roman{enumiii}.}
+
+  \setbeamerfont{footnote}{family=\rmfamily}
+  \setbeamerfont{footnote~mark}{family=\rmfamily}
+
+  \setbeamertemplate{caption}[numbered]
+  \setbeamertemplate{caption~label~separator}[colon]
+  \setbeamercolor{caption}{fg=black}
+  \setbeamerfont{caption}{family=\rmfamily}
+  \setbeamercolor{caption~name}{fg=black}
+  \setbeamerfont{caption~name}{family=\rmfamily, series=\bfseries}
+
+  % from amsmath.dtx
+  % \def\maketag@@@#1{\hbox{\m@th\normalfont#1}}
+  \def\maketag@@@##1{\hbox{\m@th\normalfont\rmfamily##1}}
+  \hypersetup{linkcolor=black}
+}{
+}
+\makeatother
+
+\NewDocumentEnvironment {CenterStrip} {O{\textwidth} m}
+{
+  \begin{minipage}[c][#2\baselineskip][c]{#1}
+}{
+  \end{minipage}
+}
+
+\NewDocumentCommand \OverfullCenter {+m}
+{
+	\noindent
+	\makebox[\linewidth]{#1}
+}
+
+\tikzstyle{buttonstyle} = [
+  align=center,
+  rectangle,
+  fill=black!10,
+  draw=black!80,
+  drop~shadow,
+  font={\bfseries},
+]
+
+\NewDocumentCommand \button {m}
+{
+  \tikz[
+    baseline={([yshift=-.8ex]current~bounding~box.center)},
+  ]{
+    \node[buttonstyle] {\normalsize #1};
+  }
+}
+
+\NewDocumentCommand \doc {m m}
+{
+  \button{\href{#1}{Docs:~\texttt{#2}}}
+}
+
+% used to show headline at beginning of each logical section
+\NewDocumentCommand \headlineframe {m}
+{
+  \begin{frame}
+    \begin{center}
+      \Huge\color{vertexDarkRed}#1
+    \end{center}
+  \end{frame}
+}
+
+\NewDocumentCommand \removedisplayskip {}
+{
+  \setlength\abovedisplayskip{0ex}
+  \setlength\belowdisplayskip{0ex}
+  \setlength\abovedisplayshortskip{0ex}
+  \setlength\belowdisplayshortskip{0ex}
+}
+
+\makeatletter
+\seteverylogo
+{
+  \setlogodrop{0.7ex}
+  \setLaTeXa{{\scshape a}}
+  \fp_compare:nNnTF {\f@size} > {10}
+  {
+    \setlogokern{La}{-0.33em}
+  }
+  {
+    \fp_compare:nNnTF {\f@size} < {10}
+    {
+      \setlogokern{La}{-0.4em}
+    }
+    {
+      \setlogokern{La}{-0.36em}
+    }
+  }
+}
+\makeatother
+
+\let\TeXold=\TeX
+\def\TeX{\latinmodernrm{\TeXold}}
+\def\eTeX{$ε$-\TeX}
+\let\LaTeXold=\LaTeX
+\def\LaTeX{\latinmodernrm{\LaTeXold}}
+\let\XeTeXold=\XeTeX
+\def\XeTeX{\latinmodernrm{\XeTeXold}}
+\let\XeLaTeXold=\XeLaTeX
+\def\XeLaTeX{\latinmodernrm{\XeLaTeXold}}
+\let\LuaTeXold=\LuaTeX
+\def\LuaTeX{\latinmodernrm{\LuaTeXold}}
+\let\LuaLaTeXold=\LuaLaTeX
+\def\LuaLaTeX{\latinmodernrm{\LuaLaTeXold}}
+\def\pdfTeX{\latinmodernrm{pdf\TeX}}
+\def\BibTeX{\latinmodernrm{\textsc{Bib}\TeX}}
+\def\BibLaTeX{\latinmodernrm{Bib\LaTeX}}
+
+% macro examples
+\NewDocumentCommand \dif {m}
+{
+  \mathinner{\symup{d} #1}
+}
+\NewDocumentCommand \Dif {m}
+{
+  \mathinner{\symup{D} #1}
+}
+\NewDocumentCommand \del {m}
+{
+  \mathinner{\symup{\delta} #1}
+}
+\NewDocumentCommand \Del {m}
+{
+  \mathinner{\symup{\Delta} #1}
+}
+
+\let\vaccent=\v
+\RenewDocumentCommand \v {}
+{
+  \TextOrMath{
+    \vaccent
+  }{
+    \symbf
+  }
+}
+
+\let\ltext=\l
+\RenewDocumentCommand \l {}
+{
+  \TextOrMath { \ltext }{ \mleft }
+  % \mathopen{}\mathclose\bgroup\left
+}
+\let\raccent=\r
+\RenewDocumentCommand \r {}
+{
+  \TextOrMath { \raccent }{ \mright }
+  % \aftergroup\egroup\right
+}
+
+\AtBeginDocument{
+  \let\symRe=\Re
+  \RenewDocumentCommand \Re {}
+  {
+    \operatorname{Re}
+  }
+  \let\symIm=\Im
+  \RenewDocumentCommand \Im {}
+  {
+    \operatorname{Im}
+  }
+}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\bra}{\langle}{\rvert}
+\DeclarePairedDelimiter{\ket}{\lvert}{\rangle}
+\DeclarePairedDelimiterX{\braket}[2]{\langle}{\rangle}{#1\delimsize|#2}
+
+\NewDocumentCommand \titlecmd {m} {\texttt{\textbackslash #1}}
+
+\ExplSyntaxOff
+
+\NewDocumentCommand\reST {}{\texttt{reST}}

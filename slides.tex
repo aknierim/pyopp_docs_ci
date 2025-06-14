@@ -1,0 +1,79 @@
+\input{header.tex}
+
+\usepackage[
+  backend=biber,
+  sorting=nyt,
+  sortlocale=de_DE.UTF-8,
+]{biblatex}
+
+
+\title[PYOPP]{Continuous Integration (CI) and Documentation}
+\titlegraphic{figures/latex-vs-word.pdf}
+
+\addbibresource{examples.bib}
+
+\setbeamertemplate{section page}{
+  \begin{center}
+    \Huge\color{vertexDarkRed}\insertsection
+  \end{center}
+}
+
+\AtBeginSection{
+  \begin{frame}
+    \sectionpage
+  \end{frame}
+}
+
+\setbeamertemplate{subsection page}{
+  \begin{center}
+    \color{vertexDarkRed}
+    \Huge\insertsection \\[10pt]
+    \Large\insertsubsection
+  \end{center}
+}
+
+\AtBeginSubsection{
+  \begin{frame}
+    \subsectionpage
+  \end{frame}
+}
+
+\makeatletter
+\patchcmd{\beamer@sectionintoc}
+  {\vfill}
+  {\vskip\itemsep}
+  {}
+  {}
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+% \begin{frame}{Übersicht}
+%   \linespread{1.5}
+%   \begin{columns}[onlytextwidth, t]
+%     \begin{column}{0.5\textwidth}
+%       \tableofcontents[sections=-8]
+%     \end{column}
+%     \begin{column}{0.5\textwidth}
+%       \tableofcontents[sections=9-15]
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+%
+% \begin{frame}{Übersicht}
+%   \linespread{1.5}
+%   \begin{columns}[onlytextwidth, t]
+%     \begin{column}{0.5\textwidth}
+%       \tableofcontents[sections=16]
+%     \end{column}
+%     \begin{column}{0.5\textwidth}
+%       \tableofcontents[sections=17-]
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+\input{content/docs.tex}
+
+\end{document}
