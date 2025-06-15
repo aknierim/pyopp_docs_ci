@@ -1,0 +1,135 @@
+\section{Documentation}
+
+
+\begin{frame}[fragile]{What You Will Learn:}
+  \begin{itemize}
+    \item Documenting your code using \emph{Sphinx}
+    \item \emph{reStructuredText} (\reST/\texttt{RST}) syntax
+    \item Using \emph{Read the Docs}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Why Should We Document Our Code?}
+  Well-documented code improves...
+  \begin{itemize}
+    \item Maintainability: Future Developers, debugging, collaboration, ...
+    \item Accessibility: Make your package easier to understand for new users
+    \item Collaboration: Docs as a shared knowledge source
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{
+  What is Sphinx?
+  \hfill
+  \doc{https://www.sphinx-doc.org}{Sphinx}}
+  \begin{itemize}
+    \item Open-source, extensible documentation generator written in Python
+    \item Multiple output formats: \texttt{HTML}, \LaTeX{} (for \texttt{PDF}), \texttt{ePub}, and more...
+    \item Creates cross-references within your project and across different projects
+    \item Allows documentation using a mark-up language (\reST)
+    \item Supports various docstring formats (some through extensions)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Installation}
+  Sphinx can be installed via standard package managers:
+  \begin{itemize}
+    \item Installing from PyPI using \texttt{pip}:
+    \begin{minted}{shell-session}
+      $ pip install -U sphinx
+    \end{minted}
+    \item Conda/Mamba:
+    \begin{minted}{shell-session}
+      $ mamba install sphinx
+    \end{minted}
+    \begin{minted}{shell-session}
+      $ conda install -c conda-forge sphinx
+    \end{minted}
+
+    \item Debian/Ubuntu using \texttt{apt}:
+    \begin{minted}{shell-session}
+      $ sudo apt install python3-sphinx
+    \end{minted}
+
+    \item Homebrew:
+      \begin{minted}{shell-session}
+        $ brew install sphinx-doc
+      \end{minted}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Getting Started}
+  \begin{minted}[escapeinside=||]{shell-session}
+    $ sphinx-quickstart docs
+    |\textcolor{cmauve}{> Separate source and build directories (y/n) [n]:}| y
+    |\textcolor{cmauve}{> Project name:}| ...
+    |\textcolor{cmauve}{> Author name(s):}| ...
+    |\textcolor{cmauve}{> Project release []:}| ...
+  \end{minted}
+
+  \xdefinecolor{dircolor}{HTML}{f0c481}
+  \forestset{
+    textfile/.style = {
+      execute at begin node=\textcolor{vertexDarkRed}{\faFile*}\space
+    },
+    batchfile/.style = {
+      execute at begin node=\textcolor{vertexDarkRed}{\faTerminal}\space
+    },
+    makefile/.style = {
+      execute at begin node=\textcolor{vertexDarkRed}{\faFile}\space
+    },
+    pythonfile/.style = {
+      execute at begin node=\textcolor{vertexDarkRed}{\faPython}\space
+    },
+    opened/.style = {execute at begin node=\textcolor{dircolor}{\faFolderOpen}\space},
+    closed/.style = {execute at begin node=\textcolor{dircolor}{\faFolder}\space},
+    dir tree/.style = {
+      grow'=0,
+      font=\ttfamily,
+      folder,
+      fit=band,
+      s sep=5pt,
+      before computing xy={l=20pt},
+      edge={rounded corners=2pt},
+    }
+  }
+
+  \begin{center}
+  \pause
+  \begin{minipage}{.45\textwidth}
+  \begin{forest}
+    for tree={dir tree}
+    [docs, opened
+      [build, closed]
+      [source, opened
+        [\_static, closed]
+        [\_templates, closed]
+        [conf.py, pythonfile]
+        [index.rst, textfile]
+      ]
+      [make.bat, batchfile]
+      [Makefile, makefile]
+    ]
+  \end{forest}
+  \end{minipage}
+  \hfill
+  \pause
+  \begin{minipage}{.45\textwidth}
+    \begin{forest}
+      for tree={dir tree}
+      [docs, opened
+        [\_build, closed]
+        [\_static, closed]
+        [\_templates, closed]
+        [conf.py, pythonfile]
+        [index.rst, textfile]
+        [make.bat, batchfile]
+        [Makefile, makefile]
+      ]
+    \end{forest}
+  \end{minipage}
+  \end{center}
+\end{frame}
