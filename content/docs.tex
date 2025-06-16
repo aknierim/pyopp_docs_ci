@@ -11,9 +11,9 @@
 
 
 \begin{frame}[fragile]{Why Should We Document Our Code?}
-  Well-documented code improves...
+  Well-documented code improves\dots
   \begin{itemize}
-    \item Maintainability: Future developers, debugging, collaboration, ...
+    \item Maintainability: Future developers, debugging, \dots
     \item Accessibility: Make your package easier to understand for new users
     \item Collaboration: Docs as a shared knowledge source
   \end{itemize}
@@ -26,7 +26,7 @@
   \doc{https://www.sphinx-doc.org}{Sphinx}}
   \begin{itemize}
     \item Open-source, extensible documentation generator written in Python
-    \item Multiple output formats: \texttt{HTML}, \LaTeX{} (for \texttt{PDF}), \texttt{ePub}, and more...
+    \item Multiple output formats: \texttt{HTML}, \LaTeX{} (for \texttt{PDF}), \texttt{ePub}, and more\dots
     \item Creates cross-references within your project and across different projects
     \item Allows documentation using a mark-up language (\reST)
     \item Supports various docstring formats (some through extensions)
@@ -215,9 +215,96 @@
         \item While overlines are optional, they are encouraged for parts and chapters
         \item Parts are also commonly set using \texttt{\#}
         \item Any of the following symbols are valid for over- and underlines:\\
-          \mintinline{shell-session}{= - * ^ + " _ ' # ` . , : ; ~}
+          \textcolor{vertexDarkRed}{\texttt{=} \texttt{*} \texttt{-} \texttt{\textasciicircum} \texttt{"} \texttt{+} \texttt{\_} \texttt{\#} \texttt{\textasciitilde}}
+          \mintinline{shell-session}{` . , : ; ' ! ? & $ %}
+          \mintinline{shell-session}+( ) [ ] { }+\\
+          \mintinline{shell-session}+< > @ \ / |+
       \end{itemize}
     \end{column}
   \end{columns}
 
+\end{frame}
+
+
+\begin{frame}[fragile]{Docstrings}
+  Most of the documentation work will require you to write docstrings. The three most common
+  formats are:
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.78\textwidth}
+      \begin{itemize}
+        \item<1-2> \reST:
+          \begin{minted}{python}
+            """[Summary of your method]
+
+            :param [Parameter name]: [Parameter description]
+            :type [Parameter name]: [Parameter type](, optional)
+            :returns: [Return description]
+            :rtype: [Return type]
+            :raises [Exception class]: [Exception description]
+            """
+          \end{minted}
+
+        \item<2> Example:
+          \begin{minted}{python}
+            """This is a reST-style docstring.
+
+            :param param1: First parameter.
+            :type param1: float
+            :param param2: Second parameter, defaults to None.
+            :type param2: str, optional
+            :returns: Returns some value.
+            :rtype: int
+            :raises ValueError: Raises an exception.
+            """
+          \end{minted}
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{0.2\textwidth}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Docstrings}
+  Most of the documentation work will require you to write docstrings. The three most common
+  formats are:
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.78\textwidth}
+      \begin{itemize}
+        \item Google:
+          \begin{minted}{python}
+            """[Summary of your method]
+
+            Args:
+                [Parameter name] ([Parameter type](, optional)): [Parameter description]
+
+            Returns:
+                [Return type]: [Return description]
+
+            Raises:
+                [Exception class]: [Exception description]
+            """
+          \end{minted}
+
+        \item Example:
+          \begin{minted}{python}
+            """This is a Google-style docstring.
+
+            Args:
+                param1 (float): First parameter.
+                param2 (:obj:`str`, optional): Second parameter. Defaults to None.
+
+            Returns:
+                int: Returns some value.
+
+            Raises:
+                ValueError: Raises an exception.
+            """
+          \end{minted}
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{0.2\textwidth}
+    \end{column}
+  \end{columns}
 \end{frame}
