@@ -225,86 +225,121 @@
 
 \end{frame}
 
-
 \begin{frame}[fragile]{Docstrings}
   Most of the documentation work will require you to write docstrings. The three most common
   formats are:
-  \begin{columns}[t, onlytextwidth]
-    \begin{column}{0.78\textwidth}
-      \begin{itemize}
-        \item<1-2> \reST:
-          \begin{minted}{python}
-            """[Summary of your method]
+  \begin{CodeExplanation}{0.49}[\reST][Example]
+    \footnotesize
+    \begin{minted}{python}
+      """[Summary of your method]
 
-            :param [Parameter name]: [Parameter description]
-            :type [Parameter name]: [Parameter type](, optional)
-            :returns: [Return description]
-            :rtype: [Return type]
-            :raises [Exception class]: [Exception description]
-            """
-          \end{minted}
+      :param [Parameter name]: [Parameter description]
+      :type [Parameter name]: [Parameter type](, optional)
+      :returns: [Return description]
+      :rtype: [Return type]
+      :raises [Exception class]: [Exception description]
+      """
+    \end{minted}
+    \Explanation
+    \footnotesize
+    \begin{minted}{python}
+      """This is a reST-style docstring.
 
-        \item<2> Example:
-          \begin{minted}{python}
-            """This is a reST-style docstring.
-
-            :param param1: First parameter.
-            :type param1: float
-            :param param2: Second parameter, defaults to None.
-            :type param2: str, optional
-            :returns: Returns some value.
-            :rtype: int
-            :raises ValueError: Raises an exception.
-            """
-          \end{minted}
-      \end{itemize}
-    \end{column}
-    \hfill
-    \begin{column}{0.2\textwidth}
-    \end{column}
-  \end{columns}
+      :param param1: First parameter.
+      :type param1: float
+      :param param2: Second parameter, defaults to None.
+      :type param2: str, optional
+      :returns: Some return value.
+      :rtype: int
+      :raises ValueError: Raises an exception.
+      """
+    \end{minted}
+  \end{CodeExplanation}
 \end{frame}
 
 \begin{frame}[fragile]{Docstrings}
   Most of the documentation work will require you to write docstrings. The three most common
   formats are:
-  \begin{columns}[t, onlytextwidth]
-    \begin{column}{0.78\textwidth}
-      \begin{itemize}
-        \item Google:
-          \begin{minted}{python}
-            """[Summary of your method]
+  \begin{CodeExplanation}{0.49}[Google][Example]
+    \footnotesize
+      \begin{minted}{python}
+        """[Summary of your method]
 
-            Args:
-                [Parameter name] ([Parameter type](, optional)): [Parameter description]
+        Args:
+            [Parameter name] ([Parameter type](, optional)): [Parameter description]
 
-            Returns:
-                [Return type]: [Return description]
+        Returns:
+            [Return type]: [Return description]
 
-            Raises:
-                [Exception class]: [Exception description]
-            """
-          \end{minted}
+        Raises:
+            [Exception class]: [Exception description]
+        """
+      \end{minted}
+    \Explanation
+    \footnotesize
+      \begin{minted}{python}
+        """This is a Google-style docstring.
 
-        \item Example:
-          \begin{minted}{python}
-            """This is a Google-style docstring.
+        Args:
+            param1 (float): First parameter.
+            param2 (:obj:`str`, optional): Second parameter. Defaults to None.
 
-            Args:
-                param1 (float): First parameter.
-                param2 (:obj:`str`, optional): Second parameter. Defaults to None.
+        Returns:
+            int: Some return value.
 
-            Returns:
-                int: Returns some value.
+        Raises:
+            ValueError: Raises an exception.
+        """
+      \end{minted}
+  \end{CodeExplanation}
+\end{frame}
 
-            Raises:
-                ValueError: Raises an exception.
-            """
-          \end{minted}
-      \end{itemize}
-    \end{column}
-    \hfill
-    \begin{column}{0.2\textwidth}
-    \end{column}
-  \end{columns}
+\begin{frame}[fragile]{Docstrings}
+  Most of the documentation work will require you to write docstrings. The three most common
+  formats are:
+  \begin{CodeExplanation}{0.59}[\texttt{numpydoc}][Example]
+    \footnotesize
+    \begin{minted}{python}
+      """[Summary of your method]
+
+      Parameters
+      ----------
+      [Parameter name] : [Parameter type](, optional)
+          [Parameter description]
+
+      Returns
+      -------
+      [Return name or type]( : [Return type if name was given])
+          [Return description]
+
+      Raises
+      ------
+      [Exception class]
+          [Exception description]
+      """
+    \end{minted}
+    \Explanation
+    \footnotesize
+    \begin{minted}{python}
+      """This is a numpydoc-style docstring.
+
+      Parameters
+      ----------
+      param1 : float
+          First parameter.
+      param2 : str, optional
+          Second parameter. Default: None
+
+      Returns
+      -------
+      int
+          Some return value.
+
+      Raises
+      ------
+      ValueError
+          Raises an exception.
+      """
+    \end{minted}
+  \end{CodeExplanation}
 \end{frame}
