@@ -26,6 +26,38 @@
 \setbeamertemplate{bibliography item}{\insertbiblabel}
 
 
+\forestset{
+  textfile/.style = {
+    execute at begin node=\textcolor{vertexDarkRed}{\faFile*}\space
+  },
+  batchfile/.style = {
+    execute at begin node=\textcolor{vertexDarkRed}{\faTerminal}\space
+  },
+  makefile/.style = {
+    execute at begin node=\textcolor{vertexDarkRed}{\faFile}\space
+  },
+  pythonfile/.style = {
+    execute at begin node=\textcolor{vertexDarkRed}{\faPython}\space
+  },
+  opened/.style = {execute at begin node=\textcolor{dircolor}{\faFolderOpen}\space},
+  closed/.style = {execute at begin node=\textcolor{dircolor}{\faFolder}\space},
+  dir tree/.style = {
+    grow'=0,
+    font=\ttfamily,
+    folder,
+    fit=band,
+    s sep=5pt,
+    before computing xy={l=20pt},
+    edge={rounded corners=2pt},
+  },
+  visible on/.style={
+    % for tree={
+    /tikz/visible on={#1},
+    for children={
+      edge={/tikz/visible on={#1}}}
+    },
+}
+
 
 % Tabularray settings
 \DefTblrTemplate{contfoot-text}{normal}{Weiter auf der nächsten Seite}
