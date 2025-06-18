@@ -82,32 +82,6 @@
     |\textcolor{cmauve}{> Project language [en]:}| ...
   \end{minted}
 
-  \forestset{
-    textfile/.style = {
-      execute at begin node=\textcolor{vertexDarkRed}{\faFile*}\space
-    },
-    batchfile/.style = {
-      execute at begin node=\textcolor{vertexDarkRed}{\faTerminal}\space
-    },
-    makefile/.style = {
-      execute at begin node=\textcolor{vertexDarkRed}{\faFile}\space
-    },
-    pythonfile/.style = {
-      execute at begin node=\textcolor{vertexDarkRed}{\faPython}\space
-    },
-    opened/.style = {execute at begin node=\textcolor{dircolor}{\faFolderOpen}\space},
-    closed/.style = {execute at begin node=\textcolor{dircolor}{\faFolder}\space},
-    dir tree/.style = {
-      grow'=0,
-      font=\ttfamily,
-      folder,
-      fit=band,
-      s sep=5pt,
-      before computing xy={l=20pt},
-      edge={rounded corners=2pt},
-    }
-  }
-
   \begin{center}
   \pause
   \begin{minipage}{.45\textwidth}
@@ -320,26 +294,303 @@
 
 \begin{frame}[fragile]{Filling the Docs With Some API References}
   We will create the API references (semi-)automatically in a few steps:
-  \begin{columns}[t, onlytextwidth]
+  \begin{columns}[onlytextwidth]
     \begin{column}{0.48\textwidth}
       \begin{enumerate}
         \item <1-> Copy the structure of your actual package
         \item <2-> Populate every subdirectory with a \texttt{index.rst}
         \item <3-> Create separate \texttt{.rst} files for every submodule
       \end{enumerate}
+      \vspace{0.25cm}
+      \begin{center}
+        \adjustbox{max height=5cm}{%
+          \begin{forest}
+            for tree={dir tree}
+            [package, opened
+              [module1, opened
+                [\_\_init\_\_.py, pythonfile]
+                [submodule\_a.py, pythonfile]
+                [submodule\_b.py, pythonfile]
+              ]
+              [module2, opened
+                [\_\_init\_\_.py, pythonfile]
+                [submodule\_c.py, pythonfile]
+              ]
+              [\_\_init\_\_.py, pythonfile]
+            ]
+          \end{forest}
+        }
+      \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        % \adjustbox{max height=5cm}{%
+          \begin{forest}
+            for tree={dir tree}
+            [docs, opened
+              [api-reference, opened
+                [module1, opened
+                  [index.rst, textfile, visible on=<2->]
+                  [submodule\_a.rst, textfile, visible on=<3->]
+                  [submodule\_b.rst, textfile, visible on=<3->]
+                ]
+                [module2, opened
+                  [index.rst, textfile, visible on=<2->]
+                  [submodule\_c.rst, textfile, visible on=<3->]
+                ]
+                [index.rst, textfile, visible on=<2->]
+              ]
+              [...]
+            ]
+          \end{forest}
+        % }
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Filling the Docs With Some API References}
+  For now, the API reference will still be empty. We have to fill in
+  the \texttt{index.rst} files to change that. Starting with
+  \texttt{api-reference/index.rst}:\\[1em]
+
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.38\textwidth}
+      \begin{block}{Code}
+      \begin{minted}{rst}
+        .. _api-reference:
+
+        *************
+        API Reference
+        *************
+
+        .. toctree::
+          :maxdepth: 1
+          :glob:
+
+          */index
+      \end{minted}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.58\textwidth}
+      We add\dots
+      \begin{enumerate}
+        \setlength{\itemsep}{1.5em}
+        \item A tag \texttt{.. \_api-reference:} to the file so we can reference it if necessary
+        \item A title, \eg, \enquote{API Reference}
+        \item The table of contents with the \texttt{.. toctree::} directive
+          \begin{itemize}
+            \item And add only \texttt{index.rst} files from the subdirectories to the TOC
+          \end{itemize}
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Filling the Docs With Some API References}
+
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Code}
+      \scriptsize
+      \begin{minted}{rst}
+        .. _module1:
+
+        ********************************
+        Module1 (:mod:`project.module1`)
+        ********************************
+
+        .. currentmodule:: project.module1
+
+
+        Introduction
+        ============
+
+        :mod:`project.module1` contains useful methods and classes.
+
+
+        Submodules
+        ==========
+
+        .. toctree::
+          :maxdepth: 1
+          :glob:
+
+          submodule_a
+          submodule_b
+
+
+        Reference/API
+        =============
+
+        .. automodapi:: project.module1
+            :no-inheritance-diagram:
+      \end{minted}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.46\textwidth}
+      Now, we do the same for the \texttt{index.rst} files in the module directories:\\[1em]
+      We add\dots
+      \begin{enumerate}
+        \setlength{\itemsep}{1.5em}
+        \item A tag and module title
+        \item The \texttt{.. currentmodule::} directive to let Sphinx know that
+          classes and functions documented from here on are in the given module
+        \item (optional) Some introduction to the module
+        \item The table of contents for the submodules of the module
+        \item The \texttt{.. automodapi::} directive for the current module to get a list of
+          classes and functions
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Filling the Docs With Some API References}
+  Finally, we write the submodule \texttt{.rst} files:
+
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Code}
+      \footnotesize
+      \begin{minted}{rst}
+        .. _data:
+
+        ************************************************
+        submodule_a (:mod:`project.module1.submodule_a`)
+        ************************************************
+
+        .. currentmodule:: project.module1.submodule_a
+
+        Submodule of :mod:`project.module1`.
+
+
+        Reference/API
+        =============
+
+        .. automodapi:: project.module1.submodule_a
+            :inherited-members:
+      \end{minted}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.46\textwidth}
+      We add\dots
+      \begin{enumerate}
+        \setlength{\itemsep}{1.5em}
+        \item A tag, the submodule title, and the\\\texttt{.. currentmodule::} directive
+        \item (optional) Some introduction to the submodule
+        \item The \texttt{.. automodapi::} directive for the current submodule to get a list of
+          classes and functions
+      \end{enumerate}
     \end{column}
   \end{columns}
 \end{frame}
 
 
-\begin{frame}[fragile]{Some reStructuredText (\texttt{reST}) Syntax}
+\subsection{reStructuredText (\reST)}
+
+\begin{frame}[fragile]{
+    \reST{} Basics
+    \hfill
+    \doc{https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html}{\reST}
+  }
+  \begin{itemize}
+    \setlength{\itemsep}{1em}
+    \item Paragraphs are the fundamental text blocks in \reST, \ie, text chunks at the same
+      indentation and separated by blank lines
+    \item Inline Markup:
+      \begin{CodeExplanation}{0.59}[Code][Output]
+        \begin{minted}{rst}
+          *text* **text** ``text``
+        \end{minted}
+      \Explanation
+        \textit{text} \textbf{text} \texttt{text}
+      \end{CodeExplanation}
+    \item Hyperlinks:
+      \begin{CodeExplanation}{0.59}[Code][Output]
+        \begin{minted}{rst}
+          This text contains `a link`_.
+
+          .. _a link: https://erumdatahub.de
+
+
+          This text contains an
+          embedded `link <https://erumdatahub.de>`__.
+        \end{minted}
+      \Explanation
+        This text contains \href{https://erumdatahub.de}{a link}.\\[1em]
+
+        This text contains an embedded \href{https://erumdatahub.de}{link}.
+      \end{CodeExplanation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Tables}
+  \begin{itemize}
+    \item Basic tables are similar to Markdown tables
+    \item Rendering depends on your theme
+  \end{itemize}
+  \begin{block}{Code}
+    \begin{minted}{rst}
+      +------------------+------------+----------+
+      | Header 1         | Header 2   | Header 3 |
+      +==================+============+==========+
+      | Column 1, Row 1  | 1.00       | 42       |
+      +------------------+------------+----------+
+      | Column 1, Row 2  | ...        | ...      |
+      +------------------+------------+----------+
+    \end{minted}
+  \end{block}
+  \begin{block}{CSV Tables}
+    \begin{minted}{rst}
+      .. csv-table:: Table Title
+         :header: "Header 1", "Header 2", "Header 3"
+         :widths: 15, 10, 10
+
+         "Column 1, Row 1", 1.00, 42
+         "Column 1, Row 2", ..., ...
+    \end{minted}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Lists}
+  \begin{block}{Code}
+    \begin{minted}{rst}
+      * A bulleted list
+ 
+      - This is also a bulleted list.
+      - But this one has two items, and this
+        item has two lines
+
+      1. A numbered list.
+ 
+      #. Autonumbering is also possible.
+      #. This is done using a ``#`` sign.
+    \end{minted}
+  \end{block}
+  \begin{block}{Nested Lists}
+    \begin{minted}{rst}
+      * A bulleted list.
+
+        * With a nested bulleted list.
+        * Nested lists have to be separated by a blank line
+
+      * This continues the parent list.
+    \end{minted}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]{Headings}
   \begin{columns}[t, onlytextwidth]
     \begin{column}{0.33\textwidth}
-      \begin{block}{Headings}
+      \begin{block}{Code}
         \begin{minted}{rst}
-          ====
+          ####
           Part
-          ====
+          ####
 
           *******
           Chapter
@@ -362,21 +613,70 @@
     \hfill
     \begin{column}{0.66\textwidth}
       \begin{itemize}
-        \setlength{\itemsep}{1em}
+        \setlength{\itemsep}{1.5em}
         \item The structure is technically determined by order of occurance
         \begin{itemize}
-          \item \textbf{But}: For better readability stick to the same order throughout your docs, \eg, the one shown here
+          \item \textbf{But}: For better readability stick to the same order throughout your docs, \eg, the one shown here (recommended)
         \end{itemize}
         \item While overlines are optional, they are encouraged for parts and chapters
-        \item Parts are also commonly set using \texttt{\#}
         \item Any of the following symbols are valid for over- and underlines:\\
-          \textcolor{vertexDarkRed}{\texttt{=} \texttt{*} \texttt{-} \texttt{\textasciicircum} \texttt{"} \texttt{+} \texttt{\_} \texttt{\#} \texttt{\textasciitilde}}
+          \textcolor{vertexDarkRed}{\texttt{\#} \texttt{*} \texttt{=} \texttt{-} \texttt{\textasciicircum} \texttt{"} \texttt{+} \texttt{\_} \texttt{\textasciitilde}}
           \mintinline{shell-session}{` . , : ; ' ! ? & $ %}
           \mintinline{shell-session}+( ) [ ] { }+\\
           \mintinline{shell-session}+< > @ \ / |+
       \end{itemize}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{
+    Roles, Directives, and Field Lists
+    \hfill
+    \doc{https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html}{Roles}
+    \doc{https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html}{Directives}
+    \doc{https://www.sphinx-doc.org/en/master/usage/restructuredtext/field-lists.html}{Field Lists}
+  }
+  \begin{block}{Roles}
+    Roles are \textbf{inline} pieces of explicit markup that are understood by Sphinx.
+    The syntax is:
+    \begin{center}
+      \begin{minted}{rst}
+        :rolename:`content`
+      \end{minted}
+    \end{center}
+
+    Examples:
+    \begin{minted}{rst}
+      :mod:`package.module1` :code:`foo = 42` :math:`F = m\cdot a`
+    \end{minted}
+  \end{block}
+  \begin{block}{Directives and Field Lists}
+    Directives are \textbf{blocks} of explicit markup that are understood by Sphinx.
+    The syntax is:
+    \begin{center}
+      \footnotesize
+      \begin{minted}{rst}
+        .. directive:: [(optional) elements depending on directive]
+           [:(optional) field list:]
+
+           [Body elements of the directive]
+      \end{minted}
+    \end{center}
+
+    Examples:
+    \footnotesize
+    \begin{minted}{rst}
+      .. image:: picture.png
+         :width: 90%
+         :alt: A nice picture.
+
+      .. code-block::
+         :caption: A code block.
+
+         def func(param: int) -> int: ...
+    \end{minted}
+  \end{block}
+
 \end{frame}
 
 \subsection{Docstrings}
@@ -390,7 +690,11 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Docstrings | \reST}
+\begin{frame}[fragile]{%
+    Docstrings | \reST
+    \hfill
+    \doc{https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html}{\reST{} Style}
+  }
   \begin{block}{Structure}
     \footnotesize
     \begin{minted}{python}
@@ -421,7 +725,11 @@
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Docstrings | Google}
+\begin{frame}[fragile]{%
+    Docstrings | Google
+    \hfill
+    \doc{https://google.github.io/styleguide/pyguide.html}{Google Style}
+  }
   \begin{block}{Structure}
     \footnotesize
       \begin{minted}{python}
@@ -457,7 +765,11 @@
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Docstrings | \texttt{numpydoc}}
+\begin{frame}[fragile]{%
+    Docstrings | \texttt{numpydoc}
+    \hfill
+    \doc{https://numpydoc.readthedocs.io/en/latest/format.html}{numpydoc}
+  }
   \begin{CodeExplanation}{0.59}[Structure][Example]
     \footnotesize
     \begin{minted}{python}
