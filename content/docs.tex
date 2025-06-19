@@ -826,18 +826,22 @@
     \setlength{\itemsep}{1.5em}
     \item Type hinting is the practice of declaring types for variables using a colon \texttt{:}
   after the variable name:
-  \begin{minted}{python}
-    foo: int = 1
-    bar: str = "pyopp"
-    baz: np.ndarray = np.array([...])
-  \end{minted}
+  \begin{block}{Code}
+    \begin{minted}{python}
+      foo: int = 1
+      bar: str = "pyopp"
+      baz: np.ndarray = np.array([...])
+    \end{minted}
+  \end{block}
 
   \item Usually, type hinting is only applied to function definitions:
-  \begin{minted}{python}
-    def func(param1: int, param2: int=42) -> int:
-        res = param1 + param2
-        return res
-  \end{minted}
+  \begin{block}{Code}
+    \begin{minted}{python}
+      def func(param1: int, param2: int=42) -> int:
+          res = param1 + param2
+          return res
+    \end{minted}
+  \end{block}
 
   \item Type hinting offers\dots
   \begin{itemize}
@@ -849,12 +853,168 @@
 \end{frame}
 
 \subsection{Changelogs}
-\begin{frame}[fragile]{Changelogs}
+\begin{frame}[fragile]{Why Track Changes and Use Changelogs?}
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.48\textwidth}
+       \begin{itemize}
+          \setlength{\itemsep}{1.5em}
+          \item Changelogs are curated, chronogical lists of \textbf{notable} changes
+          \item Users and (future) contributors of your package will be able to see
+            what changes have been made for each release
+          \item Changes should be grouped by type for better readability
+          \item Every new version of your package should have an entry
+        \end{itemize}
+     \end{column}
+     \hfill
+     \begin{column}{0.48\textwidth}
+       \scriptsize
+       \begin{minted}{rst}
+          Package v0.2.0 (2025-06-19)
+          ===========================
+
+
+          API Changes
+          -----------
+
+
+          Bug Fixes
+          ---------
+
+            - Fixed a bug in ``submodule_a``
+            - Fixed another bug in ``submodule_b``
+              [`#1 <https://github.com/your_project/package/pull/1>`__]
+
+
+          New Features
+          ------------
+
+            - Added ``module2``
+
+
+          Maintenance
+          -----------
+
+            - Deleted unused code
+
+ 
+          Refactoring and Optimization
+          ----------------------------
+
+            - Refactored parts of ``submodule_a``
+
+       \end{minted}
+     \end{column}
+  \end{columns}
+  \end{frame}
+
+\begin{frame}[fragile]{
+    Create Changelogs With \tc
+    \hfill
+    \doc{https://towncrier.readthedocs.io/en/stable/index.html}{\tc}
+  }
   \begin{itemize}
-    \item 
+    \setlength{\itemsep}{1.5em}
+    \item \tc{} is a tool to create changelogs for your project
+    \item Instead of adding every little change, you will create \enquote{news fragments}
+      that contain only \textbf{notable} changes
+    \item \tc{} will read these fragments and help you create a changelog for each release
+      of your package
+    \item Install \tc{} via pip or mamba/conda:
+      \begin{minted}{shell-session}
+         $ pip install towncrier
+         $ mamba install towncrier
+      \end{minted}
+
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Setting Up \tc}
+  \begin{itemize}
+    \setlength{\itemsep}{1.5em}
+    \item \tc{} is configured using your \texttt{pyproject.toml} or a \texttt{towncrier.toml} file
+    \item A basic configuration is telling \tc{} where to find news fragments and where to
+      create the changelog:
+      \begin{block}{Code}
+        \begin{minted}{toml}
+          [tool.towncrier]
+              package = "package"
+              directory = "docs/changes"
+              filename = "CHANGES.rst"
+        \end{minted}
+      \end{block}
+    \item We can also make use of a template and issue format:
+      (\href{https://github.com/radionets-project/pyvisgen/blob/main/docs/changes/template.rst}{\faExternalLink*~Good example for a template})
+      \begin{block}{Code}
+        \begin{minted}{toml}
+          [tool.towncrier]
+              ...
+              template = "docs/changes/template.rst"
+              # let towncrier create proper links to the merged PR
+              issue_format = "`#{issue} <https://github.com/your_project/package/pull/{issue}>`__"
+        \end{minted}
+      \end{block}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Setting Up \tc}
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Code}
+        \footnotesize
+        \begin{minted}{toml}
+          [tool.towncrier]
+              ...
+              [tool.towncrier.fragment.feature]
+                  name = "New Features"
+                  showcontent = true
+
+              [tool.towncrier.fragment.bugfix]
+                  name = "Bug Fixes"
+                  showcontent = true
+
+              [tool.towncrier.fragment.api]
+                  name = "API Changes"
+                  showcontent = true
+
+              [tool.towncrier.fragment.optimization]
+                  name = "Refactoring and Optimization"
+                  showcontent = true
+
+              [tool.towncrier.fragment.maintenance]
+                  name = "Maintenance"
+                  showcontent = true
+
+              [[tool.towncrier.section]]
+                  name = ""
+                  path = ""
+        \end{minted}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.48\textwidth}
+      \begin{itemize}
+        \setlength{\itemsep}{1.5em}
+        \item You can also set up the fragment types you are using
+        \item Fragments are saved under the \texttt{directory} path set in the config, \eg,
+          \texttt{docs/changes/}
+        \item The syntax for the fragment names is
+          \begin{minted}{text}
+            [PR Number].[fragment type].rst
+          \end{minted}
+          \vspace{0.5em}
+          Examples:
+          \begin{minted}{text}
+            1.feature.rst
+            1.bugfix.rst
+            2.maintenance.rst
+          \end{minted}
+        \item Multiple fragments can have the same leading PR number if they belong
+          to the same PR
+      \end{itemize}
+      \end{column}
+
+  \end{columns}
+\end{frame}
 
 \subsection{\rtd}
 \begin{frame}[fragile]{\rtd}
