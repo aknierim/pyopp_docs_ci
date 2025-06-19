@@ -9,7 +9,87 @@
       your software runs on different platforms
     \item Every commit triggers a CI job
     \item Addressing failed CI jobs before merging a PR ensures code quality
-    \item Runnind tests locally before committing adds an extra layer of verification
+    \item Running tests locally before committing adds an extra layer of ensuring code quality
   \end{itemize}
+  \begin{block}{Note}
+     The quality of your CI strongly depends on the quality of your tests.
+     \begin{itemize}
+      \item Requires effort beforehand.
+     \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{CI Services}
+  There are many CI services to choose from. Three widely used services are:
+  \begin{description}
+    \setlength{\itemsep}{1em}
+    \item[Jenkins] Self-hosted, open-source CI service. One of the oldest CI services,
+      going back as far as 2005 when it was called Hudson.
+    \item[GitLab CI] Widely used in GitLab repos, but also works with
+      other services. Can be self-hosted or hosted centrally by GitLab.
+    \item[GitHub Actions] A modular CI service developed by Microsoft. Multiple OS
+      support and easy to maintain.
+  \end{description}
+  \begin{itemize}
+    \item We will focus on GitLab CI and GitHub Actions (GHA) in the following.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{
+    Getting Started
+    \hfill
+    \doc{https://docs.github.com/en/actions}{GitHub Actions}
+    \doc{https://docs.gitlab.com/ci/}{GitLab CI}
+  }
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{GitHub Actions}
+        \begin{enumerate}
+          \item Create a \texttt{ci.yml} file in the \texttt{.github/workflows}
+            directory (create the directory if necessary)
+          \item Set up some basics in the CI file:
+            \footnotesize
+            \begin{minted}{yaml}
+              name: CI
+
+              on:
+                push:
+                  branches:
+                    - main
+                  tags:
+                    - '**'
+                pull_request:
+
+              env:
+                MPLBACKEND: Agg
+                PYTEST_ADDOPTS: --color=yes
+                GITHUB_PR_NUMBER: ${{ github.event.number }}
+            \end{minted}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{GitLab CI}
+        \begin{enumerate}
+          \item Create a \texttt{.gitlab-ci.yml} file in the root of your repository
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+\begin{frame}[fragile]{Getting Started}
+  \begin{columns}[t, onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{GitHub Actions}
+         a
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{GitLab CI}
+         a
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
