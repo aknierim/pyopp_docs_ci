@@ -1012,13 +1012,117 @@
           to the same PR
       \end{itemize}
       \end{column}
-
   \end{columns}
 \end{frame}
 
-\subsection{\rtd}
+\begin{frame}[fragile]{Building the Changelog and Adding It to the Docs}
+  \begin{itemize}
+    \setlength{\itemsep}{1em}
+    \item To build the changelog, \tc{} provides a CLI tool:
+      \begin{minted}{shell-session}
+         $ towncrier build
+      \end{minted}
+    \item This creates the \texttt{CHANGES.rst} file set in the config, or prepends to it
+      if it already exists
+    \item \tc{} will ask you whether it can delete the used news fragments automatically
+    \item To include the changelog in the docs, you can create a file \texttt{docs/changelog.rst}:
+      \begin{block}{Code}
+        \begin{minted}{rst}
+           **********
+           Change Log
+           **********
+
+           .. include:: ../CHANGES.rst
+         \end{minted}
+      \end{block}
+  \end{itemize}
+\end{frame}
+
+\subsection{Hosting and Publishing}
+\begin{frame}[fragile]{Hosts For Your Docs}
+   So far, the docs are either in your local repository or also pushed to the remote,
+   but not published. There are several ways to host your docs to make them available
+   for your community:
+   \begin{itemize}
+    \item \rtd
+    \item GitHub pages
+    \item Other online hosting services
+   \end{itemize}
+
+   The most common host is \rtd, which will be introduced in the following.
+\end{frame}
 \begin{frame}[fragile]{\rtd}
   \begin{itemize}
-    \item 
+    \setlength{\itemsep}{1.5em}
+    \item Free, if your package is open-source, \ie, publically available on, \eg, GitHub or GitLab
+    \item No secret handling required
+    \item Allows you to preview your docs on every PR
+    \item Works seeminglessly with Sphinx
+    \item Automatically builds the docs from your \texttt{main} branch
+    \item Supports downloading the docs in PDF or other formats
+    \item Hosting supported by ethical ads
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Getting Started With \rtd}
+  \begin{enumerate}
+    \item Set up a \texttt{.readthedocs.yaml} file in your repository:
+      \begin{block}{Code}
+        \begin{minted}{yaml}
+          version: 2
+
+          build:
+            os: ubuntu-24.04
+            apt_packages:
+              - graphviz
+            tools:
+              python: "3.11"  # or whatever Python version you prefer
+
+          python:
+            install:
+              - method: pip
+                path: .
+                extra_requirements:
+                  - docs
+
+          sphinx:
+            configuration: docs/conf.py
+        \end{minted}
+      \end{block}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Getting Started With \rtd}
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{enumerate}
+        \setlength{\itemsep}{1em}
+        \setcounter{enumi}{1}
+        \item <1-> Sign up/log in to \rtd{} (Community), \eg, via GitHub, GitLab, or Bitbucket
+        \item <2-> In your dashboard, click on \enquote{Add project}
+        \item <3-> Search for your repository and click \enquote{Continue}
+        \item <4-> Configure the basic settings and click \enquote{Next}
+        \item <5-> Ensure the \texttt{.readthedocs.yaml} file exists in your repository, and click \enquote{This file exists}
+        \item <6-> Your docs should now be building and will be rebuilt anytime a PR is merged into \texttt{main}
+      \end{enumerate}
+    \end{column}
+    \hfill
+    \begin{column}{0.48\textwidth}
+      \only<2>{
+        \includegraphics[width=\textwidth]{graphics/rtd1.png}
+      }
+      \only<3>{
+        \includegraphics[width=\textwidth]{graphics/rtd2.png}
+      }
+      \only<4>{
+        \includegraphics[width=\textwidth]{graphics/rtd3.png}
+      }
+      \only<5>{
+        \includegraphics[width=\textwidth]{graphics/rtd4.png}
+      }
+      \only<6>{
+        \includegraphics[width=\textwidth]{graphics/rtd5.png}
+      }
+    \end{column}
+  \end{columns}
 \end{frame}
