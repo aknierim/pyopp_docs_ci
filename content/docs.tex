@@ -241,7 +241,6 @@
        "numpy": ("https://numpy.org/doc/stable", None),
        ...
     }
-
     suppress_warnings = ["intersphinx.external"]  # sometimes necessary
 
     templates_path = ["_templates"]
@@ -488,6 +487,45 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{Creating a Nice Landing Page and Adding the API Reference}
+  \begin{block}{Code}
+    \scriptsize
+    \begin{minted}{rst}
+      :html_theme.sidebar_secondary.remove: true
+      :html_theme.sidebar_primary.remove: true
+
+      .. _package:
+
+      .. show title in tab name but not on index page
+      .. raw:: html
+
+        <div style="height: 0; visibility: hidden;">
+
+      =======
+      Package
+      =======
+
+      .. currentmodule:: package
+
+      **Version**: |version| | **Date**: |today|
+
+      **Useful links**: `Source Repository <https://github.com/your_project/package>`__ |
+      `Issue Tracker <https://github.com/your_project/package/issues>`__ |
+      `Pull Requests <https://github.com/your_project/package/pulls>`__
+
+      **License**: `MIT <https://github.com/your_project/package/blob/main/LICENSE>`__
+
+      **Python**: |python_requires|
+
+      .. toctree::
+         :maxdepth: 1
+         :hidden:
+
+         api-reference/index
+         changelog
+    \end{minted}
+  \end{block}
+\end{frame}
 
 \subsection{reStructuredText (\reST)}
 
