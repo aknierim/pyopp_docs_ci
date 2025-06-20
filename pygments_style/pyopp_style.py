@@ -1,15 +1,11 @@
-from pygments.styles.nord import NordStyle
-from pygments.token import Comment, Generic, Name, Token, Whitespace
+from pygments.styles.solarized import SolarizedLightStyle
+from pygments.token import Keyword, Comment, String
 
-styles = NordStyle.styles.copy()
-# remove *italic* in the default
-styles[Comment] = "#66696e"
-styles[Generic.Output] = "#66696e"
-styles[Name] = "#66696e"
-styles[Name.Variable] = "#66696e"
-styles[Whitespace] = "#66696e"
-styles[Token] = "#66696e"
+styles = SolarizedLightStyle.styles.copy()
+styles[Comment.Multiline] = "#4a5454"
+styles[String.Doc] = "#4a5454"
+styles[Keyword] = "#31ce60"
 
 
-class Pyopp(NordStyle):
+class Pyopp(SolarizedLightStyle):
     styles = styles
