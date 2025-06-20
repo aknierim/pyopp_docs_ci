@@ -25,30 +25,29 @@
     \setlength{\itemsep}{1em}
     \item[Jenkins] Self-hosted, open-source CI service. One of the oldest CI services,
       going back as far as 2005 when it was called Hudson.
-    \item[GitLab CI] Widely used in GitLab repos, but also works with
-      other services. Can be self-hosted or hosted centrally by GitLab.
     \item[GitHub Actions] A modular CI service developed by Microsoft. Multiple OS
       support and easy to maintain.
+    \item[GitLab CI] Widely used in GitLab repos, but also works with
+      other services. Can be self-hosted or hosted centrally by GitLab.
   \end{description}
   \begin{itemize}
-    \item We will focus on GitLab CI and GitHub Actions (GHA) in the following.
+    \item We will focus on GitHub Actions (GHA) and GitLab CI in the following.
   \end{itemize}
 \end{frame}
 
 
 \begin{frame}[fragile]{
-    Getting Started
+    Getting Started | GitHub Actions
     \hfill
     \doc{https://docs.github.com/en/actions}{GitHub Actions}
-    \doc{https://docs.gitlab.com/ci/}{GitLab CI}
   }
-  \begin{columns}[t, onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{GitHub Actions}
-        \begin{enumerate}
-          \item Create a \texttt{ci.yml} file in the \texttt{.github/workflows}
-            directory (create the directory if necessary)
-          \item Set up some basics in the CI file:
+  \begin{enumerate}
+    \item Create a \texttt{ci.yml} file in the \texttt{.github/workflows}
+        directory (create the directory if necessary)
+    \item Set up some basics in the CI file:
+      \begin{columns}[t, onlytextwidth]
+        \begin{column}{0.52\textwidth}
+          \begin{block}{Code}
             \footnotesize
             \begin{minted}{yaml}
               name: CI
@@ -64,21 +63,88 @@
               env:
                 MPLBACKEND: Agg
                 PYTEST_ADDOPTS: --color=yes
-                GITHUB_PR_NUMBER: ${{ github.event.number }}
             \end{minted}
-        \end{enumerate}
-      \end{block}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{block}{GitLab CI}
-        \begin{enumerate}
-          \item Create a \texttt{.gitlab-ci.yml} file in the root of your repository
-        \end{enumerate}
-      \end{block}
-    \end{column}
-  \end{columns}
+          \end{block}
+        \end{column}
+        \begin{column}{0.44\textwidth}
+          \pause
+          \begin{enumerate}
+            \setlength{\itemsep}{1em}
+            \item <2-> Name the CI, especially if you are running multiple CIs/CDs
+            \item <3-> Set up when the CI should be run, \eg, on every push/merge to \texttt{main}
+              and for every PR
+            \item <4-> Set up some environment variables, such as the matplotlib backend and color output for pytest
+          \end{enumerate}
+        \end{column}
+      \end{columns}
+  \end{enumerate}
 \end{frame}
-\begin{frame}[fragile]{Getting Started}
+
+\begin{frame}[fragile]{Getting Started | GitHub Actions}
+  \begin{enumerate}
+      \setcounter{enumi}{2}
+      \item Set up a job for your CI:
+        \begin{block}{Code}
+          \begin{minted}{yaml}
+            jobs:
+              tests:  # Name of the job
+                runs-on: ubuntu-latest
+
+                defaults:
+                  run:
+                    # We need login shells (-l) for micromamba to work.
+                    shell: bash -leo pipefail {0}
+
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: mamba-org/setup-micromamba@v1
+                    with:
+                      environment-file: environment.yml
+          \end{minted}
+        \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Getting Started | GitHub Actions}
+  \begin{enumerate}
+      \setcounter{enumi}{2}
+    \item Set up a job for your CI (cont.):
+        \begin{block}{Code}
+          \footnotesize
+          \begin{minted}{yaml}
+                steps:
+                  - ...
+
+                  - name: Install dependencies
+                    run: |
+                      python --version
+                      pip install pytest-cov restructuredtext-lint pytest-xdist 'coverage!=6.3.0'
+                      pip install -e .[all]
+                      pip freeze
+                      pip list
+
+                  - name: List installed package versions (conda)
+                    if: matrix.environment-type == 'mamba'
+                    run: micromamba list
+
+                  - name: Tests
+                    run: |
+                      pytest -vv --cov --cov-report=xml
+
+                  - name: Upload coverage to Codecov
+                    uses: codecov/codecov-action@v4
+                    env:
+                      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          \end{minted}
+        \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{
+    Getting Started | GitLab CI
+    \hfill
+    \doc{https://docs.gitlab.com/ci/}{GitLab CI}
+  }
   \begin{columns}[t, onlytextwidth]
     \begin{column}{0.48\textwidth}
       \begin{block}{GitHub Actions}
