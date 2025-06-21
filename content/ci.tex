@@ -36,6 +36,7 @@
 \end{frame}
 
 
+\subsection{Getting Started | GitHub Actions}
 \begin{frame}[fragile]{
     Getting Started | GitHub Actions
     \hfill
@@ -80,7 +81,6 @@
   \end{enumerate}
 \end{frame}
 
-\subsection{Getting Started | GitHub Actions}
 \begin{frame}[fragile]{Getting Started | GitHub Actions}
   \begin{enumerate}
       \setcounter{enumi}{2}
@@ -197,7 +197,6 @@
    \item So far we tested only on one platform
    \item We have to ensure our package also runs on all target platforms
       and all target versions of Python
-   \item We will also select one platform for our coverage report
   \end{itemize}
 \end{frame}
 
@@ -247,12 +246,12 @@
                       install-method: mamba
 
                     - os: ubuntu-latest
-                      python-version: "3.11"
+                      python-version: "3.12"
                       install-method: mamba
                       extra-args: ["codecov"]  # lead platform for code cov
 
                     - os: ubuntu-latest
-                      python-version: "3.11"
+                      python-version: "3.12"
                       install-method: pip
 
                     - os: macos-13
@@ -369,7 +368,9 @@
 
 \subsection{Linting With the CI}
 \begin{frame}[fragile]{Linting With the CI}
+  The linting job should preferably be started before the tests.
   \begin{block}{Code}
+  \footnotesize
     \begin{minted}{yaml}
       jobs:
         lint:
@@ -381,7 +382,7 @@
 
             - uses: actions/setup-python@v5
               with:
-                python-version: "3.11"
+                python-version: "3.12"
 
             - name: Check README syntax
               run: |
@@ -394,6 +395,40 @@
     \end{minted}
   \end{block}
 \end{frame}
+
+
+\subsection{Building the Docs With the CI}
+\begin{frame}[fragile]{Building the Docs With the CI}
+  The docs job can be started last.
+  \begin{block}{Code}
+  \footnotesize
+    \begin{minted}{yaml}
+      jobs:
+        docs:
+            runs-on: ubuntu-24.04
+            steps:
+              - uses: actions/checkout@v4
+                with:
+                  fetch-depth: 0
+
+              - name: Set up Python
+                uses: actions/setup-python@v5
+                with:
+                  python-version: "3.12"
+
+              - name: Install doc dependencies
+                run: |
+                  sudo apt update --yes && sudo apt install --yes git build-essential pandoc graphviz ffmpeg
+                  pip install -U pip towncrier setuptools
+                  pip install -e .[docs]
+                  git describe --tags
+
+              - name: Build docs
+                run: make doc
+    \end{minted}
+  \end{block}
+\end{frame}
+
 
 \subsection{Changelog CI}
 \begin{frame}[fragile]{Changelog CI}
@@ -434,8 +469,93 @@
     \hfill
     \doc{https://docs.gitlab.com/ci/}{GitLab CI}
   }
+  Let's take what we have written in GitHub Actions to GitLab CI:
   \begin{enumerate}
-    \item
+    \item Create a \texttt{.gitlab-ci.yml} file in the root of your repository
+    \item Basic setup:
+      \begin{block}{Code}
+        \begin{minted}{yaml}
+          image: condaforge/miniforge3:24.11.3-0
+
+          variables:
+            MPLBACKEND: Agg
+            PYTEST_ADDOPTS: --color=yes
+
+          stages:
+            - test
+            - docs
+        \end{minted}
+      \end{block}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{GitLab CI}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Create a reusable template for all platforms:
+      \begin{block}{Code}
+        \footnotesize
+        \begin{minted}{yaml}
+          .test_template: &test_template
+            stage: test
+            before_script:
+              - apt-get update && apt-get install -y curl bzip2
+
+              # Setup correct python version in environment.yml
+              - mamba env create -f environment.yml
+              - source /opt/conda/etc/profile.d/conda.sh
+              - conda activate [your_env_name]
+
+              - pip install pytest-cov restructuredtext-lint pytest-xdist 'coverage!=6.3.0'
+              - pip install -e .
+              - pip freeze
+              - pip list
+            script:
+              - pytest -vv --cov --cov-report=xml
+            artifacts:
+              paths:
+                - coverage.xml
+              reports:
+                coverage_report:
+                  coverage_format: cobertura
+                  path: coverage.xml
+        \end{minted}
+      \end{block}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{GitLab CI}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Add jobs for each platform:
+      \begin{block}{Code}
+        \footnotesize
+        \begin{minted}{yaml}
+          # Python 3.10 test job
+          test:python-3.10:
+            <<: *test_template
+            variables:
+              PYTHON_VERSION: "3.10"
+            rules:
+              - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /documentation-only/
+                when: never
+              - when: always
+
+          # Python 3.11 test job with codecov
+          test:python-3.11:
+            <<: *test_template
+            variables:
+              PYTHON_VERSION: "3.11"
+            after_script:
+              - curl -Os https://cli.codecov.io/latest/linux/codecov
+              - chmod +x codecov
+              - ./codecov upload-process -t $CODECOV_TOKEN
+            rules:
+              - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /documentation-only/
+                when: never
+              - when: always
+        \end{minted}
+      \end{block}
   \end{enumerate}
 \end{frame}
 

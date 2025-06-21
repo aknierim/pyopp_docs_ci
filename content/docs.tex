@@ -407,17 +407,15 @@
         .. _module1:
 
         ********************************
-        Module1 (:mod:`project.module1`)
+        Module1 (:mod:`package.module1`)
         ********************************
 
-        .. currentmodule:: project.module1
-
+        .. currentmodule:: package.module1
 
         Introduction
         ============
 
-        :mod:`project.module1` contains useful methods and classes.
-
+        :mod:`package.module1` contains useful methods and classes.
 
         Submodules
         ==========
@@ -429,11 +427,10 @@
           submodule_a
           submodule_b
 
-
         Reference/API
         =============
 
-        .. automodapi:: project.module1
+        .. automodapi:: package.module1
             :no-inheritance-diagram:
       \end{minted}
       \end{block}
@@ -467,18 +464,18 @@
         .. _data:
 
         ************************************************
-        submodule_a (:mod:`project.module1.submodule_a`)
+        submodule_a (:mod:`package.module1.submodule_a`)
         ************************************************
 
-        .. currentmodule:: project.module1.submodule_a
+        .. currentmodule:: package.module1.submodule_a
 
-        Submodule of :mod:`project.module1`.
+        Submodule of :mod:`package.module1`.
 
 
         Reference/API
         =============
 
-        .. automodapi:: project.module1.submodule_a
+        .. automodapi:: package.module1.submodule_a
             :inherited-members:
       \end{minted}
       \end{block}
@@ -992,7 +989,7 @@
         \end{minted}
       \end{block}
     \item We can also make use of a template and issue format:
-      (\href{https://github.com/radionets-project/pyvisgen/blob/main/docs/changes/template.rst}{\faExternalLink*~Good example for a template})
+      (\href{https://github.com/astropy/astropy/blob/main/docs/changes/template.rst}{\faExternalLink*~Good example for a template})
       \begin{block}{Code}
         \begin{minted}{toml}
           [tool.towncrier]
