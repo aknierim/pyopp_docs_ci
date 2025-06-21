@@ -4,20 +4,19 @@ channels:
 dependencies:
   - python=3.12
   - pip
-  - matplotlib
   - numpy>=2.0
   - pandas
-  - requests
-  - scipy
-  - sympy
-  - uncertainties
   - jupyter
   - notebook
   - ipython
   - pre-commit
   - nbstripout
+  - sphinx
+  - sphinx-automodapi
+  - sphinx-copybutton
+  - pydata-sphinx-theme
+  - numpydoc
   - black
-  - black-jupyter
   - sphinx
   - pip:
     - ./pygments_style
