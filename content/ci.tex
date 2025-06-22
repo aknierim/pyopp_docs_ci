@@ -501,7 +501,6 @@
             before_script:
               - apt-get update && apt-get install -y curl bzip2
 
-              # Setup correct python version in environment.yml
               - mamba env create -f environment.yml
               - source /opt/conda/etc/profile.d/conda.sh
               - conda activate [your_env_name]
@@ -531,7 +530,6 @@
       \begin{block}{Code}
         \footnotesize
         \begin{minted}{yaml}
-          # Python 3.10 test job
           test:python-3.10:
             <<: *test_template
             variables:
@@ -541,7 +539,6 @@
                 when: never
               - when: always
 
-          # Python 3.11 test job with codecov
           test:python-3.11:
             <<: *test_template
             variables:
@@ -559,10 +556,67 @@
   \end{enumerate}
 \end{frame}
 
+\begin{frame}[fragile]{Test Docs Build | GitLab CI}
+  \begin{block}{Code}
+    \footnotesize
+    \begin{minted}{yaml}
+      docs:
+        stage: test
+        image: python:3.12-slim
+        before_script:
+          - apt update --yes
+          - apt install --yes git build-essential pandoc graphviz ffmpeg make
+          
+          - pip install -U pip towncrier setuptools
+          - pip install -e .[docs]
+          
+          - git describe --tags
+        script:
+          - make doc
+      \end{minted}
+   \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Changelog | GitLab CI}
+  \begin{block}{Code}
+    \scriptsize
+    \begin{minted}{yaml}
+      changelog:
+        stage: test
+        image: ubuntu:latest
+        rules:
+          - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+        variables:
+          FRAGMENT_NAME: "docs/changes/${CI_MERGE_REQUEST_IID}.*.rst"
+        before_script:
+          - apt-get update && apt-get install -y git
+        script:
+          - git fetch --unshallow || true
+          
+          - |
+            if echo "$CI_MERGE_REQUEST_LABELS" | grep -q "no-changelog-needed"; then
+              echo "Skipping changelog check due to 'no-changelog-needed' label"
+              exit 0
+            fi
+          
+          - |
+            if ls $FRAGMENT_NAME 1> /dev/null 2>&1; then
+              echo "Changelog fragment found: $(ls $FRAGMENT_NAME)"
+            else
+              echo "Error: No changelog fragment found matching pattern: $FRAGMENT_NAME"
+              echo "Please add a changelog fragment for this merge request."
+              exit 1
+            fi
+        only:
+          - merge_requests
+     \end{minted}
+   \end{block}
+\end{frame}
+
 \subsection{Badges}
 \begin{frame}[fragile]{Badges}
   \begin{itemize}
-    \item
+    \item 
   \end{itemize}
 \end{frame}
 
