@@ -212,14 +212,14 @@
   When using a \texttt{pyproject.toml} file for our project, we automatically get the metadata
   from that file using \texttt{tomli} or \texttt{tomllib} (Python $\geqslant$ \texttt{3.11}):
   \begin{block}{Code | \texttt{docs/conf.py}}
-  \footnotesize
+  \scriptsize
   \begin{minted}{python}
     #!/usr/bin/env python3
     import datetime
     import sys
     from pathlib import Path
 
-    import pyvisgen
+    import package  # your package
 
     if sys.version_info < (3, 11):
         import tomli as tomllib
@@ -235,6 +235,12 @@
         author, datetime.datetime.now().strftime("%d %b %Y %H:%M")
     )
     python_requires = pyproject["project"]["requires-python"]
+    rst_epilog = f"""
+    .. |python_requires| replace:: {python_requires}
+    """
+
+    version = pyvisgen.__version__
+    release = version  # full release version
   \end{minted}
   \end{block}
 \end{frame}
@@ -319,9 +325,9 @@
     htmlhelp_basename = project + "docs"
   \end{minted}
   \end{block}
+  Check out \emph{Sphinx Themes Gallery} for a curated list of available themes:
+  \href{https://sphinx-themes.org/}{sphinx-themes.org}
 \end{frame}
-
-
 
 
 \begin{frame}[fragile]{Filling the Docs With Some API References}
