@@ -1,5 +1,15 @@
 \section{Continuous Integration (CI)}
 
+\begin{frame}[fragile]{What You Will Learn:}
+  \begin{itemize}
+    \item Using CIs to test your code on GitHub or GitLab for multiple platforms
+    \item Code coverage
+    \item Linting using your CI
+    \item Adding badges to your repository
+  \end{itemize}
+\end{frame}
+
+
 \begin{frame}[fragile]{What is Continuous Integration?}
   \begin{itemize}
     \setlength{\itemsep}{1em}
@@ -418,13 +428,13 @@
 
               - name: Install doc dependencies
                 run: |
-                  sudo apt update --yes && sudo apt install --yes git build-essential pandoc graphviz ffmpeg
+                  sudo apt update -y && sudo apt install -y git build-essential pandoc graphviz ffmpeg
                   pip install -U pip towncrier setuptools
                   pip install -e .[docs]
                   git describe --tags
 
               - name: Build docs
-                run: make doc
+                run: make -C docs html
     \end{minted}
   \end{block}
 \end{frame}
@@ -482,6 +492,7 @@
             PYTEST_ADDOPTS: --color=yes
 
           stages:
+            - lint
             - test
             - docs
         \end{minted}
@@ -523,9 +534,14 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{GitLab CI}
+
+\begin{frame}[fragile]{
+    GitLab CI
+    \hfill
+    \doc{https://docs.gitlab.com/ci/variables/predefined_variables/}{Predefined Variables}
+  }
   \begin{enumerate}
-    \setcounter{enumi}{2}
+    \setcounter{enumi}{3}
     \item Add jobs for each platform:
       \begin{block}{Code}
         \footnotesize
@@ -556,6 +572,31 @@
   \end{enumerate}
 \end{frame}
 
+
+\begin{frame}[fragile]{Linting | GitLab CI}
+  \begin{block}{Code}
+    \footnotesize
+    \begin{minted}{yaml}
+      lint:
+        stage: lint
+        image: python:3.12-slim
+        before_script:
+          - apt update -y
+          - apt install -y git
+          - git fetch --unshallow || true
+
+          - pip install restructuredtext-lint pre-commit
+          - pre-commit install
+        script:
+          - restructuredtext-lint README.rst
+          - pre-commit run --files $(git diff origin/main --name-only) || true
+        rules:
+          - when: always
+      \end{minted}
+   \end{block}
+\end{frame}
+
+
 \begin{frame}[fragile]{Test Docs Build | GitLab CI}
   \begin{block}{Code}
     \footnotesize
@@ -564,18 +605,21 @@
         stage: test
         image: python:3.12-slim
         before_script:
-          - apt update --yes
-          - apt install --yes git build-essential pandoc graphviz ffmpeg make
-          
+          - apt update -y
+          - apt install -y git build-essential pandoc graphviz ffmpeg make
+
           - pip install -U pip towncrier setuptools
           - pip install -e .[docs]
-          
+
           - git describe --tags
         script:
-          - make doc
+          - make -C docs html
+        rules:
+          - when: always
       \end{minted}
    \end{block}
 \end{frame}
+
 
 \begin{frame}[fragile]{Changelog | GitLab CI}
   \begin{block}{Code}
@@ -613,10 +657,39 @@
    \end{block}
 \end{frame}
 
+
 \subsection{Badges}
 \begin{frame}[fragile]{Badges}
   \begin{itemize}
-    \item 
+    \item Badges are small images that display the status of your CI or code coverage
+    \item Including a badge in your README is as simple as adding an image:
+      \begin{block}{Code}
+        \scriptsize
+        \begin{minted}{rst}
+        =============================
+        package |ci| |codecov| |pypi|
+        =============================
+
+        .. |ci| image:: https://github.com/your_project/package/actions/workflows/ci.yml/badge.svg?branch=main
+           :target: https://github.com/your_project/package/actions/workflows/ci.yml?branch=main
+           :alt: Test Status
+
+        .. Badges from GitLab CI
+        .. |ci| image:: https://gitlab.com/your_project/package/badges/-/pipeline.svg
+           :target: https://gitlab.com/your_project/package/-/pipelines/latest
+           :alt: Test Status
+
+        .. |codecov| image:: https://codecov.io/github/your_project/package/badge.svg
+           :target: https://codecov.io/github/your_project/package
+           :alt: Code coverage
+
+        .. |pypi| image:: https://badge.fury.io/py/package.svg
+           :target: https://pypi.org/project/package
+           :alt: PyPI release
+        \end{minted}
+      \end{block}
+    \item Great sources for creating badges (\eg, PyPI version): \href{https://badge.fury.io/}{badge.fury.io}
+      and \href{https://shields.io}{shields.io}
   \end{itemize}
 \end{frame}
 
