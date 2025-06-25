@@ -1,0 +1,54 @@
+\appendix
+\section{Backup}
+
+\begin{frame}{Sphinx Extensions: Notable Mentions}
+  \begin{itemize}
+    \setlength{\itemsep}{1em}
+    \item \href{https://nbsphinx.readthedocs.io}{\texttt{nbsphinx}}: Built on \texttt{nbconvert} to include Jupyter Notebooks in the docs
+    \item \href{https://sphinx-design.readthedocs.io/en/latest/}{\texttt{sphinx-design}}: Adds components for responsive web components
+    \item \href{https://sphinx-gallery.github.io/stable/index.html}{\texttt{sphinx-gallery}}: Creates example galleries from python scripts.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{
+    Jupyter Notebooks in Sphinx
+    \hfill
+    \doc{https://nbsphinx.readthedocs.io/}{\texttt{nbsphinx}}
+  }
+  \begin{itemize}
+    \setlength{\itemsep}{0.75em}
+    \item Sometimes it is nicer to write a tutorial in a Jupyter notebook
+    \item \texttt{nbsphinx} is a Sphinx extension that will include notebooks in your docs:
+    \begin{minted}{shell-session}
+      $ mamba install nbsphinx
+      $ pip install nbsphinx
+    \end{minted}
+    \item Add \texttt{nbsphinx} to your extensions list in \texttt{conf.py}
+    \begin{block}{Code}
+      \scriptsize
+      \begin{minted}{python}
+        extensions = [
+            ...
+            "nbsphinx"
+        ]
+      \end{minted}
+    \end{block}
+    \item Create a new directory, \eg, \texttt{tutorials}, move the notebook (\eg, \texttt{plot.ipynb}) there,
+    and add an \texttt{index.rst}:
+    \begin{block}{Code}
+      \scriptsize
+      \begin{minted}{rst}
+        *********
+        Tutorials
+        *********
+
+        .. toctree::
+           :maxdepth: 1
+           :glob:
+
+           plot .. name of the notebook
+      \end{minted}
+    \end{block}
+  \end{itemize}
+\end{frame}
+
