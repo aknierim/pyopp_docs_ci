@@ -387,6 +387,23 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{
+    \texttt{\_\_init\_\_.py}
+    \hfill
+    \doc{https://docs.python.org/3/reference/import.html}{Import System}
+    \doc{https://peps.python.org/pep-0420/}{\texttt{PEP420}}
+  }
+  \begin{itemize}
+    \setlength{\itemsep}{1em}
+    \item \texttt{\_\_init\_\_.py} create structure in your package
+      \begin{itemize}
+        \item This creates modules in your package
+      \end{itemize}
+    \item Packages without \texttt{\_\_init\_\_.py} are \emph{namespace} packages
+    \item Sphinx (automodapi) requires the module structure to understand your package
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Filling the Docs With Some API References}
   For now, the API reference will still be empty. We have to fill in
   the \texttt{index.rst} files to change that. Starting with
